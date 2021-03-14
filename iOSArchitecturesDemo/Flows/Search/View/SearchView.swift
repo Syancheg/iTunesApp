@@ -8,14 +8,20 @@
 
 import UIKit
 
+protocol SearchViewDelegate: class {
+    func changeSearch()
+}
+
 final class SearchView: UIView {
     
     // MARK: - Subviews
     
     let searchBar = UISearchBar()
+    let control = UISegmentedControl(items: ["Поиск приложений", "Поиск музыки"])
     let tableView = UITableView()
     let emptyResultView = UIView()
     let emptyResultLabel = UILabel()
+    var type = SearchType.shared
     
     // MARK: - Init
     
@@ -34,6 +40,7 @@ final class SearchView: UIView {
     private func configureUI() {
         self.backgroundColor = .white
         self.addSearchBar()
+        self.addControl()
         self.addTableView()
         self.addEmptyResultView()
         self.setupConstraints()
@@ -69,11 +76,40 @@ final class SearchView: UIView {
         self.emptyResultView.addSubview(self.emptyResultLabel)
     }
     
+    private func addControl(){
+        switch type.type {
+        case .app:
+            self.control.selectedSegmentIndex = 0
+        case .songs:
+            self.control.selectedSegmentIndex = 1
+        }
+        
+        self.control.addTarget(self, action: #selector(chengeType), for: .valueChanged)
+        self.control.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.control)
+    }
+    
+    @objc func chengeType(_ sender: UISegmentedControl) {
+        let index = sender.selectedSegmentIndex
+        switch index {
+        case 0:
+            type.type = .app
+        case 1:
+            type.type = .songs
+        default:
+            break
+        }
+    }
+    
     private func setupConstraints() {
         let safeArea = self.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            self.searchBar.topAnchor.constraint(equalTo: self.topAnchor, constant: 8.0),
+            self.control.topAnchor.constraint(equalTo: self.topAnchor, constant: 8.0),
+            self.control.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.control.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            
+            self.searchBar.topAnchor.constraint(equalTo: self.control.bottomAnchor, constant: 8.0),
             self.searchBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.searchBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             

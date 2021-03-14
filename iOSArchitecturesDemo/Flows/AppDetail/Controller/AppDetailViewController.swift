@@ -11,8 +11,11 @@ import UIKit
 final class AppDetailViewController: UIViewController {
     
     public var app: ITunesApp
+    var scrollView: UIScrollView!
     
     lazy var headerDetailViewController = AppDetailHeaderViewController(app: app)
+    lazy var versionDetailViewController = AppDetailVersionViewController(app: app)
+    lazy var screenDetailViewController = AppDetailScreenViewController(app: app)
     
 //    private var appDetailView: AppDetailView {
 //        return self.view as! AppDetailView
@@ -39,11 +42,13 @@ final class AppDetailViewController: UIViewController {
         
         self.view.backgroundColor = .white
         self.configureNavigationController()
+        
 //        self.downloadImage()
         
         addChildViewController()
-        
         addDescriptionViewController()
+        addScreenViewController()
+        
     }
     
     // MARK: - Private
@@ -71,20 +76,33 @@ final class AppDetailViewController: UIViewController {
     }
     
     private func addDescriptionViewController() {
-        // ​TODO:​ ДЗ, сделать другие сабмодули
-        let vc = UIViewController()
         
-        view.addSubview(vc.view)
-        addChild(vc)
+        view.addSubview(versionDetailViewController.view)
+        addChild(versionDetailViewController)
         
-        vc.didMove(toParent: self)
+        versionDetailViewController.didMove(toParent: self)
         
-        vc.view.translatesAutoresizingMaskIntoConstraints = false
+        versionDetailViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            vc.view.topAnchor.constraint(equalTo: headerDetailViewController.view.bottomAnchor),
-            vc.view.leftAnchor.constraint(equalTo: view.leftAnchor),
-            vc.view.rightAnchor.constraint(equalTo: view.rightAnchor),
+            versionDetailViewController.view.topAnchor.constraint(equalTo: headerDetailViewController.view.bottomAnchor),
+            versionDetailViewController.view.leftAnchor.constraint(equalTo: view.leftAnchor),
+            versionDetailViewController.view.rightAnchor.constraint(equalTo: view.rightAnchor)
+        ])
+    }
+    
+    private func addScreenViewController(){
+        view.addSubview(screenDetailViewController.view)
+        addChild(screenDetailViewController)
+        
+        screenDetailViewController.didMove(toParent: self)
+        
+        screenDetailViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            screenDetailViewController.view.topAnchor.constraint(equalTo: versionDetailViewController.view.bottomAnchor, constant: 12),
+            screenDetailViewController.view.leftAnchor.constraint(equalTo: view.leftAnchor),
+            screenDetailViewController.view.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
     }
 }
