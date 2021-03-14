@@ -119,9 +119,10 @@ extension SearchSongsViewController: UITableViewDataSource {
 extension SearchSongsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        let songs = searchResults[indexPath.row]
-//        presenter.viewDidSearch(with: <#T##String#>)
+        tableView.deselectRow(at: indexPath, animated: true)
+        let song = searchResults[indexPath.row]
+        presenter.viewDidSelectSong(song)
+        
     }
 }
 

@@ -8,12 +8,16 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 class SongsSearchBuilder {
     
     static func build() -> ( UIViewController & SearchSongsViewInput) {
-        let presenter = SearchSongsPresenter()
+        let iteractor = SearchSongsIteractor()
+        let router = SearchSongsRouter()
+        let presenter = SearchSongsPresenter(iteractor: iteractor, router: router)
         let viewController = SearchSongsViewController(presenter: presenter)
         presenter.viewInput = viewController
+        router.viewController = viewController
         
         return viewController
     }

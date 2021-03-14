@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 final class AppStartManager {
     
     var window: UIWindow?
@@ -52,6 +53,7 @@ final class AppStartManager {
     }()
 }
 
+@available(iOS 13.0, *)
 extension AppStartManager: SearchTypeDelegate {
     func changeSearch(){
         start()

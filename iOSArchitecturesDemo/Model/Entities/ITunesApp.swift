@@ -25,7 +25,7 @@ public struct ITunesApp: Codable {
     
     public let lastUpdate: String
     public let listUpdates: String
-    public let version: String
+    public let version: String?
     
     // MARK: - Codable
     

@@ -26,34 +26,35 @@ protocol SearchSongsViewOutput {
 
 class SearchSongsPresenter {
     
-    private let searchService = ITunesSearchService()
+    let iteractor: SearchSongsIteractorInput
+    let router: SearchSongsRouterInput
+    
+    init(iteractor: SearchSongsIteractorInput, router: SearchSongsRouterInput) {
+        self.iteractor = iteractor
+        self.router = router
+    }
     
     weak var viewInput: (UIViewController & SearchSongsViewInput)?
     
     private func requestSongs(with query: String){
-        
-        self.searchService.getSongs(forQuery: query) { [weak self] (songs) in
+        iteractor.requestSongs(with: query) { [weak self] (result) in
             guard let self = self else { return }
-            self.viewInput?.throbber(show: false)
-            songs
-                .withValue { songs in
-                    guard !songs.isEmpty else {
-                        self.viewInput?.showNoResults()
-                        return
-                    }
-                    self.viewInput?.hideNoResults()
-                    self.viewInput?.searchResults = songs
-                }
-                .withError {
-                    self.viewInput?.showError(error: $0)
-                }
+            
+            if !result.isEmpty {
+                self.viewInput?.hideNoResults()
+                self.viewInput?.searchResults = result
+            } else {
+                self.viewInput?.showNoResults()
+                return
+            }
         }
     }
 }
 
 extension SearchSongsPresenter: SearchSongsViewOutput{
+    
     func viewDidSelectSong(_ app: ITunesSong) {
-        
+        router.openDetails(for: app)
     }
     func viewDidSearch(with query: String) {
         self.viewInput?.throbber(show: true)

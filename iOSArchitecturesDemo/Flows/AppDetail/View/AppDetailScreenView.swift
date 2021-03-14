@@ -16,19 +16,24 @@ class AppDetailScreenView: UICollectionView, UICollectionViewDelegate, UICollect
         }
     }
     
-    let cellSize = (UIScreen.main.bounds.width - (16 * 2) - (10 / 2)) / 1.5
+    private struct Style {
+        static let imagePadding: CGFloat = 16
+        static let minimumLineSpacing: CGFloat = 10
+    }
+    
+    let cellSize = (UIScreen.main.bounds.width - (Style.imagePadding * 2) - (Style.minimumLineSpacing / 2)) / 1.5
     
     init() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumLineSpacing = 10
+        layout.minimumLineSpacing = Style.minimumLineSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         delegate = self
         dataSource = self
         backgroundColor = .clear
         register(ScreenCell.self, forCellWithReuseIdentifier: ScreenCell.reuseId)
         translatesAutoresizingMaskIntoConstraints = false
-        contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        contentInset = UIEdgeInsets(top: 0, left: Style.imagePadding, bottom: 0, right: Style.imagePadding)
         showsVerticalScrollIndicator = false
         showsHorizontalScrollIndicator = false
         isScrollEnabled = true
