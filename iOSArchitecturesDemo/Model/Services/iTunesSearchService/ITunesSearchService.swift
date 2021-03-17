@@ -36,6 +36,7 @@ final class ITunesSearchService {
         parameters[Parameter.query] = query
         parameters[Parameter.regionCode] = regionCode
         parameters[Parameter.mediaType] = MediaType.apps.rawValue
+
         
         let request = WebRequest(method: .get, url: baseUrl, parameters: parameters)
         

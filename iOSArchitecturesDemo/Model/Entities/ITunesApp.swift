@@ -23,6 +23,10 @@ public struct ITunesApp: Codable {
     public let iconUrl: String?
     public let screenshotUrls: [String]
     
+    public let lastUpdate: String
+    public let listUpdates: String
+    public let version: String?
+    
     // MARK: - Codable
     
     private enum CodingKeys: String, CodingKey {
@@ -36,6 +40,10 @@ public struct ITunesApp: Codable {
         case size = "fileSizeBytes"
         case iconUrl = "artworkUrl512"
         case screenshotUrls = "screenshotUrls"
+        
+        case lastUpdate = "currentVersionReleaseDate"
+        case listUpdates = "releaseNotes"
+        case version = "version"
     }
     
     public init(from decoder: Decoder) throws {
@@ -50,6 +58,9 @@ public struct ITunesApp: Codable {
         self.size = (try? container.decode(String.self, forKey: .size)) >>- { Bytes($0) }
         self.iconUrl = try? container.decode(String.self, forKey: .iconUrl)
         self.screenshotUrls = (try? container.decode([String].self, forKey: .screenshotUrls)) ?? []
+        self.lastUpdate = try container.decode(String.self, forKey: .lastUpdate)
+        self.listUpdates = try container.decode(String.self, forKey: .listUpdates)
+        self.version = try container.decode(String.self, forKey: .version)
     }
     
     // MARK: - Init
@@ -63,7 +74,10 @@ public struct ITunesApp: Codable {
                   averageRatingForCurrentVersion: Float?,
                   size: Bytes?,
                   iconUrl: String?,
-                  screenshotUrls: [String]) {
+                  screenshotUrls: [String],
+                  lastUpdate: String,
+                  listUpdates: String,
+                  version: String) {
         self.appName = appName
         self.appUrl = appUrl
         self.company = company
@@ -74,5 +88,23 @@ public struct ITunesApp: Codable {
         self.size = size
         self.iconUrl = iconUrl
         self.screenshotUrls = screenshotUrls
+        self.lastUpdate = lastUpdate
+        self.listUpdates = listUpdates
+        self.version = version
+    }
+    
+    func daysHavePassed(stringDate: String) -> String {
+        let now = Date()
+        guard let lastUpdate = dateFormatter.date(from: stringDate),
+              let dayPassed = Calendar.current.dateComponents([.day], from: lastUpdate, to: now).day
+        else { return "" }
+        return "\(dayPassed) дней назад"
+    }
+    
+    private var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return dateFormatter
     }
 }

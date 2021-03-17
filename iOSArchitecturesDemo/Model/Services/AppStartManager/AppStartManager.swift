@@ -8,23 +8,39 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 final class AppStartManager {
     
     var window: UIWindow?
-    
+    var type = SearchType.shared
     init(window: UIWindow?) {
         self.window = window
+        self.type.delegate = self
     }
     
     func start() {
-        let rootVC = SearchBuilder.build()
-        rootVC.navigationItem.title = "Search via iTunes"
+        switch type.type {
+        case .app:
+            let rootVC = SearchBuilder.build()
+            rootVC.navigationItem.title = "Search via iTunes"
+            
+            let navVC = self.configuredNavigationController
+            navVC.viewControllers = [rootVC]
+            
+            window?.rootViewController = navVC
+            window?.makeKeyAndVisible()
+        case .songs:
+            let rootVC = SongsSearchBuilder.build()
+            rootVC.navigationItem.title = "Search via iTunes"
+            
+            let navVC = self.configuredNavigationController
+            navVC.viewControllers = [rootVC]
+
+            window?.rootViewController = navVC
+            window?.makeKeyAndVisible()
+            
+        }
         
-        let navVC = self.configuredNavigationController
-        navVC.viewControllers = [rootVC]
-        
-        window?.rootViewController = navVC
-        window?.makeKeyAndVisible()
     }
     
     private lazy var configuredNavigationController: UINavigationController = {
@@ -35,4 +51,11 @@ final class AppStartManager {
         navVC.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         return navVC
     }()
+}
+
+@available(iOS 13.0, *)
+extension AppStartManager: SearchTypeDelegate {
+    func changeSearch(){
+        start()
+    }
 }
