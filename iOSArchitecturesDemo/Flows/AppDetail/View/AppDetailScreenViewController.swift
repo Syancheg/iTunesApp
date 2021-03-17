@@ -16,7 +16,6 @@ class AppDetailScreenViewController: UIViewController {
     init(app: ITunesApp) {
         self.app = app
         self.collectionView = AppDetailScreenView()
-        self.collectionView.screenShots = app.screenshotUrls
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,12 +30,33 @@ class AppDetailScreenViewController: UIViewController {
     
     private func setupView(){
         view.addSubview(collectionView)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(ScreenCell.self, forCellWithReuseIdentifier: ScreenCell.reuseId)
+        
         NSLayoutConstraint.activate([
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 350)
-            
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+}
+
+extension AppDetailScreenViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return app.screenshotUrls.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ScreenCell.reuseId, for: indexPath) as! ScreenCell
+        cell.screenView.downloadImage(urlPath: app.screenshotUrls[indexPath.row])
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        CGSize(width: self.collectionView.cellSize, height: self.collectionView.frame.height)
     }
 }

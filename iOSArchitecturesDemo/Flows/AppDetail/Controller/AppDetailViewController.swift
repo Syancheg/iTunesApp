@@ -39,7 +39,6 @@ final class AppDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.view.backgroundColor = .white
         self.configureNavigationController()
         
@@ -102,7 +101,8 @@ final class AppDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             screenDetailViewController.view.topAnchor.constraint(equalTo: versionDetailViewController.view.bottomAnchor, constant: 12),
             screenDetailViewController.view.leftAnchor.constraint(equalTo: view.leftAnchor),
-            screenDetailViewController.view.rightAnchor.constraint(equalTo: view.rightAnchor)
+            screenDetailViewController.view.rightAnchor.constraint(equalTo: view.rightAnchor),
+            screenDetailViewController.view.heightAnchor.constraint(equalToConstant: 350)
         ])
     }
 }
