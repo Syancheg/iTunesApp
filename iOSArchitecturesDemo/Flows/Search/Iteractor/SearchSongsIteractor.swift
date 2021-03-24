@@ -21,15 +21,14 @@ class SearchSongsIteractor: SearchSongsIteractorInput {
     
     func requestSongs(with query: String, complition: @escaping ([ITunesSong]) -> Void) {
         if cash.cashedResult(queryString: query) {
-            complition(cash.songsCash)
+            complition(cash.songsCash[query]!)
         } else {
             searchService.getSongs(forQuery: query) { [weak self] (result) in
                 guard let self = self else { return }
                 
                 result.withValue { (songs) in
-                    self.cash.songsCash = songs
-                    self.cash.time = Date()
-                    self.cash.query = query
+                    self.cash.songsCash[query] = songs
+                    self.cash.time[query] = Date()
                     complition(songs)
                 }.withError { (error) in
                     complition([])
