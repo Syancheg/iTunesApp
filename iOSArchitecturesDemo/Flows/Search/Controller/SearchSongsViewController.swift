@@ -85,9 +85,8 @@ class SearchSongsViewController: UIViewController {
     }
     
     private func requestSongs(with query: String) {
-        presenter.viewDidSearch(with: query)
         self.searchResults = []
-        self.searchView.tableView.reloadData()
+        presenter.viewDidSearch(with: query)
     }
     
 }
